@@ -1,9 +1,12 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -36,7 +39,48 @@ public class Utility {
 		}
 		return null;
 	}
-
+	
+	public static void writeRecordedStateToFile(RecordedState recordedState, String file) throws IOException
+	{
+		ObjectOutputStream oos = null;
+		FileOutputStream fout = null;
+		try{
+		    fout = new FileOutputStream(file, false);
+		    oos = new ObjectOutputStream(fout);
+		    oos.writeObject(recordedState);
+		} catch (Exception ex) {
+		    ex.printStackTrace();
+		} finally {
+		    if(oos  != null){
+		        oos.close();
+		    } 
+		}
+	}
+	
+	public static RecordedState readRecordedStateFromFile(String file) throws IOException
+	{
+		ObjectInputStream objectinputstream = null;
+		FileInputStream streamIn = null;
+		RecordedState readState = null;
+		try {
+		    streamIn = new FileInputStream(file);
+		    objectinputstream = new ObjectInputStream(streamIn);
+		    readState = (RecordedState) objectinputstream.readObject();
+		    
+		} catch (Exception e) {
+		    e.printStackTrace();
+		} finally {
+		    if(objectinputstream != null){
+		        objectinputstream .close();
+		        
+		    } 
+		}
+		return readState;
+	}
+	
+	
+	
+	
 	public static void closeReadFile(BufferedReader br)
 	{
 		try{
