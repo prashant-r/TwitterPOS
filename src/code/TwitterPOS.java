@@ -31,7 +31,6 @@ public class TwitterPOS {
 		RecordedState recordedState = Utility.readRecordedStateFromFile(oraclePath);
 		Viterbi viterbi = new Viterbi(recordedState);
 		
-		String tagMapping = viterbi.decode(textToTag);
-		System.out.println(" Tagged as " + tagMapping);
+		List<SuperWord> tagMapping = viterbi.decode(textToTag);
 	}
 }

@@ -16,7 +16,7 @@ public class TrainPOS {
 		for(Sentence sentence: sentences)
 		{	
 			String previousTag = "*";
-			for(WordTag wordTag: sentence.wordTags)
+			for(SuperWord wordTag: sentence.wordTags)
 			{
 				updateTagCountMatrix(previousTag);
 				updateTransitionMatrix(previousTag, wordTag.postag);
@@ -26,7 +26,7 @@ public class TrainPOS {
 		}
 		
 	}
-	public void updateEmissionMatrix(WordTag currWordTag)
+	public void updateEmissionMatrix(SuperWord currWordTag)
 	{
 		if(emissionMatrix.containsKey(currWordTag.word))
 		{

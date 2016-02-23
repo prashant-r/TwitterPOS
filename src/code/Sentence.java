@@ -3,9 +3,9 @@ import java.util.List;
 
 public class Sentence {
 	
-	public List<WordTag> wordTags;
+	public List<SuperWord> wordTags;
 	
-	public Sentence(List<WordTag> wordTags)
+	public Sentence(List<SuperWord> wordTags)
 	{
 		this.wordTags = wordTags;
 	}

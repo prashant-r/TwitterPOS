@@ -134,7 +134,7 @@ public class Utility {
 	
 	public static void addSentence(List<Sentence> sentences, List<String> linesInSentence)
 	{
-		List<WordTag> wordTags = new ArrayList<WordTag>();
+		List<SuperWord> wordTags = new ArrayList<SuperWord>();
 		Sentence sentence = new Sentence(wordTags);
 		for(String lineInSentence:linesInSentence)
 		{
@@ -142,15 +142,30 @@ public class Utility {
 
 			if(parts.length == 2){
 
-				if(WordTag.validTag(parts[1]) && WordTag.validWord(parts[0]))
+				if(SuperWord.validTag(parts[1]) && SuperWord.validWord(parts[0]))
 				{
-					WordTag wordTag = new WordTag(parts[0].trim(), parts[1].trim());
+					SuperWord wordTag = new SuperWord(parts[0].trim(), parts[1].trim());
 					
 					wordTags.add(wordTag);
 				}
 			}
 		}
 		sentences.add(sentence);
+	}
+	
+	public static List<String> sentencesAsString(List<Sentence> sentences)
+	{
+		List<String> sentenceStrings = new ArrayList<String>();
+		
+		for(Sentence sentence: sentences)
+		{
+			String sent = "";
+			for(SuperWord wordTag: sentence.wordTags)
+				sent = sent + " " + wordTag.word;
+			sent.trim();
+			sentenceStrings.add(sent);
+		}
+		return sentenceStrings;		
 	}
 	
 	public static void printHashOHashMap(HashMap<String, HashMap<String, Integer>> twoDMatrix)
