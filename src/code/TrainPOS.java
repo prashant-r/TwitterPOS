@@ -1,3 +1,4 @@
+package code;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +15,7 @@ public class TrainPOS {
 		List<Sentence> sentences = Utility.readInCoNLLFormat(filename);
 		for(Sentence sentence: sentences)
 		{	
-			String previousTag = "'";
+			String previousTag = "*";
 			for(WordTag wordTag: sentence.wordTags)
 			{
 				updateTagCountMatrix(previousTag);
@@ -74,6 +75,7 @@ public class TrainPOS {
 	public void recordState(String filename) throws IOException
 	{
 		RecordedState recordedState = new RecordedState(emissionMatrix, transitionMatrix,observedTagCountMatrix);
+		recordedState.printRecordedState();
 		Utility.writeRecordedStateToFile(recordedState, oraclePath);
 	}
 	
@@ -84,11 +86,11 @@ public class TrainPOS {
 		emissionMatrix = new HashMap<String, HashMap<String,Integer>>();	
 	}
 	
+	
 	public static void main(String args[]) throws IOException
 	{
 		TrainPOS trainPOS = new TrainPOS();
 		trainPOS.readCorpus(trainPath);
 		trainPOS.recordState(oraclePath);
-	
 	}
 }

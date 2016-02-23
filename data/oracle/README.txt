@@ -1,0 +1,2 @@
+Oracle is the recorded state generated,stored and later parsed/retrieved HMM parameters by TrainPOS. When testing instances, this oracle is 
+used by the Viterbi algorithm for referral during it's own run-time. 

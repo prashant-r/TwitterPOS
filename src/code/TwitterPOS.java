@@ -1,3 +1,4 @@
+package code;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,9 +26,12 @@ public class TwitterPOS {
 			}
 			textToTag = strBuilder.toString();
 		}
+		
+		System.out.println(oraclePath);
 		RecordedState recordedState = Utility.readRecordedStateFromFile(oraclePath);
-		HashMap<String, String> tagMapping = Viterbi.decode(textToTag, recordedState);
-		for(String word: tagMapping.keySet())
-			System.out.println(word + " tagged as " + tagMapping.get(word));
+		//Viterbi viterbi = new Viterbi(recordedState);
+		
+		//String tagMapping = viterbi.decode(textToTag);
+		//System.out.println(" Tagged as " + tagMapping);
 	}
 }

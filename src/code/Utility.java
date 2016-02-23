@@ -1,3 +1,4 @@
+package code;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -149,6 +151,33 @@ public class Utility {
 			}
 		}
 		sentences.add(sentence);
+	}
+	
+	public static void printHashOHashMap(HashMap<String, HashMap<String, Integer>> twoDMatrix)
+	{
+		
+		for(String wordOrTag:twoDMatrix.keySet())
+			System.out.print("\t"+wordOrTag);
+		System.out.println();
+		for(String wordOrTag : twoDMatrix.keySet())
+		{
+			System.out.print(wordOrTag+"\t");
+				for(String tag : twoDMatrix.keySet())
+				{
+					if(twoDMatrix.get(wordOrTag).containsKey(tag))
+						System.out.print(twoDMatrix.get(wordOrTag).get(tag)+"\t");
+					else
+						System.out.print("0"+"\t");
+				}
+		System.out.println();
+		}
+		
+	}
+	
+	public static void printHashMap(HashMap<String, Integer> OneDMatrix)
+	{
+		for(String tag : OneDMatrix.keySet())
+				System.out.print( tag + " : "  + OneDMatrix.get(tag)+"\t");
 	}
 	
 }
