@@ -2,24 +2,21 @@ package code;
 
 public class Node {
 	
-	String backpointer;
-	double probability;
-	public Node(double probability, String backpointer) {
+	public Node( double probability, String postag, Node backp) {
 		super();
-		this.backpointer = backpointer;
+		this.postag = postag;
+		this.backp = backp;
 		this.probability = probability;
 	}
-	public String getBackpointer() {
-		return backpointer;
-	}
-	public void setBackpointer(String backpointer) {
-		this.backpointer = backpointer;
-	}
-	public double getProbability() {
-		return probability;
-	}
-	public void setProbability(double probability) {
-		this.probability = probability;
+
+	String postag;
+	Node backp;
+	double probability;
+	
+	@Override
+	public String toString() {
+		return "[tag=" + postag  + ", p="
+				+ probability + "]";
 	}
 	
 }

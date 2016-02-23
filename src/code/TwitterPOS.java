@@ -8,7 +8,7 @@ import java.util.List;
 public class TwitterPOS {
 	
 	public static List<Sentence> sentences;
-	private static final String oraclePath = System.getProperty("user.dir")+"/data/oracle/oracle.txt";
+	private static final String oraclePath = System.getProperty("user.dir")+"//data//oracle//oracle.txt";
 	public static void main(String args[]) throws IOException
 	{
 		String textToTag;
@@ -29,9 +29,9 @@ public class TwitterPOS {
 		
 		System.out.println(oraclePath);
 		RecordedState recordedState = Utility.readRecordedStateFromFile(oraclePath);
-		//Viterbi viterbi = new Viterbi(recordedState);
+		Viterbi viterbi = new Viterbi(recordedState);
 		
-		//String tagMapping = viterbi.decode(textToTag);
-		//System.out.println(" Tagged as " + tagMapping);
+		String tagMapping = viterbi.decode(textToTag);
+		System.out.println(" Tagged as " + tagMapping);
 	}
 }
