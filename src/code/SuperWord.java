@@ -2,11 +2,13 @@ package code;
 
 import java.util.List;
 
+import feature.FeatureVector;
+
 public class SuperWord {
 
 	public String word;
 	public String postag;
-	public List<String> features;
+	public FeatureVector features;
 	public String guessTag;
 	public String previousTag;
 	
@@ -32,11 +34,11 @@ public class SuperWord {
 		this.postag = postag;
 	}
 
-	public List<String> getFeatures() {
+	public FeatureVector getFeatures() {
 		return features;
 	}
 
-	public void setFeatures(List<String> features) {
+	public void setFeatures(FeatureVector features) {
 		this.features = features;
 	}
 

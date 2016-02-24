@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
+import feature.FeatureExtractor;
+import feature.FeatureVector;
+
 public class Utility {
 	private static Logger log = Logger.getLogger(Utility.class.getCanonicalName());
 
@@ -145,6 +148,8 @@ public class Utility {
 				if(SuperWord.validTag(parts[1]) && SuperWord.validWord(parts[0]))
 				{
 					SuperWord wordTag = new SuperWord(parts[0].trim(), parts[1].trim());
+					
+					FeatureVector features = FeatureVector.getFeatures();
 					
 					wordTags.add(wordTag);
 				}
