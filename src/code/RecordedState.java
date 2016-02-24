@@ -50,7 +50,7 @@ public class RecordedState implements Serializable {
 	
 	public void printObservedCountMatrix()
 	{
-		Utility.printHashMap(observedTagCountMatrix);
+		Utility.printHashMapA(observedTagCountMatrix);
 	}
 	
 	

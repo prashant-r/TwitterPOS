@@ -46,28 +46,18 @@ public class Viterbi {
 	public double getTransitionProbability(String first,String second)
 	{
 		if(transitionMatrix.containsKey(first))
-		{
 			if(transitionMatrix.get(first).containsKey(second))
-				return (double)transitionMatrix.get(first).get(second) / (observedTagCountMatrix.get(first)+transitionMatrix.get(first).size());
-			else 
-				return 1/(observedTagCountMatrix.get(first)+transitionMatrix.get(first).size());
-		}
-		else
-			return 0.0;
+				return (double)transitionMatrix.get(first).get(second) / (observedTagCountMatrix.get(first));
+		return 0.01/(observedTagCountMatrix.get(first));
 	}
 
 	public  double getOutputProbability(String word, String posTag)
 	{
 		
 		if(emissionMatrix.containsKey(word))
-		{
 			if(emissionMatrix.get(word).containsKey(posTag))
-				return (double)emissionMatrix.get(word).get(posTag) / (observedTagCountMatrix.get(posTag)+0.01);
-			else 
-				return (double)0.01/(observedTagCountMatrix.get(posTag)+0.01);
-		}
-		else
-			return (double)0.01/(observedTagCountMatrix.get(posTag)+0.01);
+				return (double)emissionMatrix.get(word).get(posTag) / (observedTagCountMatrix.get(posTag));
+		return 0.01/(observedTagCountMatrix.get(posTag));
 	}
 
 	public double getPriorProbability(String tag)
@@ -133,10 +123,24 @@ public class Viterbi {
 		}
 		// Find the best path
 		
-		
+		double maxProb = 0.0;
+		Node maxNode = null;
 		//printDpArray(trellis,xarr);
-		Node traverse = trellis[x][y-1];
-		
+		for(int j=0; j < y; j++)
+		{
+			if(trellis[x][j]!=null){
+				if(trellis[x][j].probability > maxProb)
+				{
+					double value = trellis[x][j].probability; 
+					if(value > maxProb)
+					{
+						maxProb = value;
+						maxNode = trellis[x][j];
+					}
+				}
+			}
+		}	
+		Node traverse = maxNode;
 		SuperWord wordtags [] = new SuperWord[words.length];
 		
 		while((traverse.backp) != null)

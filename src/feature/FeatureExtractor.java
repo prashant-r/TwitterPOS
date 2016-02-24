@@ -1,9 +1,13 @@
 package feature;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+
+import code.Sentence;
+import code.Utility;
 
 /*
  * DISCLAIMER: Code below is NOT MINE. Its from CMU ark-tweet-nlp POS Tagger, which itself derived some code from Twitter.
@@ -51,7 +55,13 @@ Please contact Brendan O'Connor (brenocon@cs.cmu.edu) and Kevin Gimpel
  */
 public class FeatureExtractor {
 	
-	private ArrayList<FeatureExtractorInterface> allFeatureExtractors;
+	public ArrayList<FeatureExtractorInterface> allFeatureExtractors;
+	
+	
+	FeatureExtractor() throws IOException
+	{
+		initializeFeatureExtractors();
+	}
 	
 	public interface FeatureExtractorInterface {
 		/**
@@ -66,6 +76,34 @@ public class FeatureExtractor {
 		public void addFeatures(List<String> tokens, PositionFeaturePairs positionFeaturePairs);
 	}
 
+	public static void getFeatures(Sentence sentence) throws IOException
+	{
+		List<String> strings = Utility.sentenceAsListString(sentence);
+		
+		PositionFeaturePairs posFairs = new PositionFeaturePairs(); 
+		FeatureExtractor featureExtractor = new FeatureExtractor();
+		for(FeatureExtractorInterface fint : featureExtractor.allFeatureExtractors)
+			fint.addFeatures(strings, posFairs);
+		for (int i=0; i < posFairs.size(); i++) {
+			int t = posFairs.labelIndexes.get(i);
+			String fName = posFairs.featureNames.get(i);
+			double fValue = posFairs.featureValues.get(i);
+			sentence.wordTags.get(t).features.put(fName,fValue);
+		}
+	}
+	
+	public static void main(String args[]) throws IOException
+	{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("Enter your text");
+		String input = br.readLine();
+		List<String> spilt = new ArrayList<String>();
+		spilt.add(input);
+		List<Sentence> sentences = new ArrayList<Sentence>();
+		Utility.addSentence(sentences,spilt );
+		
+	}
+	
 	public static class PositionFeaturePairs {
 		public ArrayList<Integer> labelIndexes;
 		public ArrayList<String> featureNames;
@@ -96,7 +134,6 @@ public class FeatureExtractor {
 
 	private void initializeFeatureExtractors() throws IOException {
 		allFeatureExtractors = new ArrayList<FeatureExtractorInterface>();
-	
 		allFeatureExtractors.add(new MiscFeatures.NgramSuffix(20));
 		allFeatureExtractors.add(new MiscFeatures.NgramPrefix(20));
 		allFeatureExtractors.add(new MiscFeatures.PrevWord());

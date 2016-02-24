@@ -9,5 +9,10 @@ public class Sentence {
 	{
 		this.wordTags = wordTags;
 	}
+
+	@Override
+	public String toString() {
+		return "Sentence [wordTags=" + wordTags + "]";
+	}
 	
 }

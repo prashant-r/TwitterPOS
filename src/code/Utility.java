@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import feature.FeatureExtractor;
-import feature.FeatureVector;
 
 public class Utility {
 	private static Logger log = Logger.getLogger(Utility.class.getCanonicalName());
@@ -135,27 +134,26 @@ public class Utility {
 		return sentences;
 	}
 	
-	public static void addSentence(List<Sentence> sentences, List<String> linesInSentence)
+	public static void addSentence(List<Sentence> sentences, List<String> linesInSentence) throws IOException
 	{
 		List<SuperWord> wordTags = new ArrayList<SuperWord>();
 		Sentence sentence = new Sentence(wordTags);
 		for(String lineInSentence:linesInSentence)
 		{
 			String[] parts = lineInSentence.split("\t");
-
 			if(parts.length == 2){
 
 				if(SuperWord.validTag(parts[1]) && SuperWord.validWord(parts[0]))
 				{
-					SuperWord wordTag = new SuperWord(parts[0].trim(), parts[1].trim());
-					
-					FeatureVector features = FeatureVector.getFeatures();
-					
+					SuperWord wordTag = new SuperWord(parts[0].trim(), parts[1].trim());	
 					wordTags.add(wordTag);
 				}
 			}
 		}
 		sentences.add(sentence);
+		
+		// Compute the features for each SuperWord
+		//FeatureExtractor.getFeatures(sentence);
 	}
 	
 	public static List<String> sentencesAsString(List<Sentence> sentences)
@@ -170,6 +168,14 @@ public class Utility {
 			sent.trim();
 			sentenceStrings.add(sent);
 		}
+		return sentenceStrings;		
+	}
+	
+	public static List<String> sentenceAsListString(Sentence sentence)
+	{
+		List<String> sentenceStrings = new ArrayList<String>();
+		for(SuperWord wordTag: sentence.wordTags)
+			sentenceStrings.add(wordTag.word);
 		return sentenceStrings;		
 	}
 	
@@ -194,11 +200,15 @@ public class Utility {
 		
 	}
 	
-	public static void printHashMap(HashMap<String, Integer> OneDMatrix)
+	public static void printHashMapA(HashMap<String, Integer> OneDMatrix)
 	{
 		for(String tag : OneDMatrix.keySet())
 				System.out.print( tag + " : "  + OneDMatrix.get(tag)+"\t");
 	}
-	
+	public static void printHashMapB(HashMap<String, Double> OneDMatrix)
+	{
+		for(String tag : OneDMatrix.keySet())
+				System.out.print( tag + " : "  + OneDMatrix.get(tag)+"\t");
+	}
 
 }

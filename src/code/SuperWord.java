@@ -1,14 +1,18 @@
 package code;
 
-import java.util.List;
-
-import feature.FeatureVector;
+import java.util.HashMap;
 
 public class SuperWord {
 
+	@Override
+	public String toString() {
+		return "SuperWord [word=" + word + ", postag=" + postag + ", features=" + features + ", guessTag=" + guessTag
+				+ ", previousTag=" + previousTag + "]";
+	}
+
 	public String word;
 	public String postag;
-	public FeatureVector features;
+	public HashMap<String, Double> features;
 	public String guessTag;
 	public String previousTag;
 	
@@ -16,6 +20,7 @@ public class SuperWord {
 	{
 		this.postag = postag;
 		this.word = word;
+		features = new HashMap<String, Double>();
 	}
 	
 	public String getWord() {
@@ -32,14 +37,6 @@ public class SuperWord {
 
 	public void setPostag(String postag) {
 		this.postag = postag;
-	}
-
-	public FeatureVector getFeatures() {
-		return features;
-	}
-
-	public void setFeatures(FeatureVector features) {
-		this.features = features;
 	}
 
 	public String getGuessTag() {
