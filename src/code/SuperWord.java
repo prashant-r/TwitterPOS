@@ -16,6 +16,17 @@ public class SuperWord {
 	public String guessTag;
 	public String previousTag;
 	
+	
+	double[] getWordFeatureVector()
+	{
+		double doubArray [] = new double[TrainPOS.fSet.featureSet.size()];
+		for(String key: features.keySet())
+			if(TrainPOS.fSet.featureSet.containsKey(key))
+				doubArray[TrainPOS.fSet.featureSet.get(key)] = features.get(key);
+		return doubArray;
+	}
+	
+	
 	SuperWord(String word, String postag)
 	{
 		this.postag = postag;

@@ -12,19 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 public class Viterbi {
 
-	private HashMap<String, HashMap<String, Integer>> emissionMatrix;
-	private HashMap<String, HashMap<String, Integer>> transitionMatrix;
-	private HashMap<String, Integer> observedTagCountMatrix;
+	private static HashMap<String, HashMap<String, Integer>> emissionMatrix;
+	private static HashMap<String, HashMap<String, Integer>> transitionMatrix;
+	private static HashMap<String, Integer> observedTagCountMatrix;
 	
 	
 	public Viterbi(RecordedState recordedState)
 	{
-		this.emissionMatrix = recordedState.emissionMatrix;
-		this.transitionMatrix = recordedState.transitionMatrix;
-		this.observedTagCountMatrix = recordedState.observedTagCountMatrix;
+		Viterbi.emissionMatrix = recordedState.emissionMatrix;
+		Viterbi.transitionMatrix = recordedState.transitionMatrix;
+		Viterbi.observedTagCountMatrix = recordedState.observedTagCountMatrix;
 	}
 	
-	public void printDpArray(Node [][] node, String [] words)
+	public static void printDpArray(Node [][] node, String [] words)
 	{
 		int counter = 0;
 		
@@ -43,12 +43,14 @@ public class Viterbi {
 	}
 	
 	
-	public double getTransitionProbability(String first,String second)
+	public static double getTransitionProbability(String first,String second)
 	{
 		if(transitionMatrix.containsKey(first))
 			if(transitionMatrix.get(first).containsKey(second))
 				return (double)transitionMatrix.get(first).get(second) / (observedTagCountMatrix.get(first));
-		return 0.01/(observedTagCountMatrix.get(first));
+			else
+				return 0.01/(observedTagCountMatrix.get(first)+0.01);
+		return 0.0;
 	}
 
 	public  double getOutputProbability(String word, String posTag)
@@ -57,10 +59,13 @@ public class Viterbi {
 		if(emissionMatrix.containsKey(word))
 			if(emissionMatrix.get(word).containsKey(posTag))
 				return (double)emissionMatrix.get(word).get(posTag) / (observedTagCountMatrix.get(posTag));
-		return 0.01/(observedTagCountMatrix.get(posTag));
+			else
+			return 0.01/(observedTagCountMatrix.get(posTag)+0.01);
+		// smooth the data for unrecognized words
+		return 0.01;
 	}
 
-	public double getPriorProbability(String tag)
+	public static double getPriorProbability(String tag)
 	{
 		int sum=0;
 		for(String key : observedTagCountMatrix.keySet())
@@ -125,7 +130,6 @@ public class Viterbi {
 		
 		double maxProb = 0.0;
 		Node maxNode = null;
-		//printDpArray(trellis,xarr);
 		for(int j=0; j < y; j++)
 		{
 			if(trellis[x][j]!=null){
@@ -152,7 +156,102 @@ public class Viterbi {
 		return Arrays.asList(wordtags);
 
 	}
+	
+	public static List<SuperWord> decode(Sentence sentence, double weight[])
+	{
+		//System.out.println(sentence);
+		
+		int x = sentence.wordTags.size();
+		String yarr[] = observedTagCountMatrix.keySet().toArray(new String[ observedTagCountMatrix.keySet().size()]);
+		
+		int y = observedTagCountMatrix.keySet().size();
+		
+		Node [][] trellis = new Node[x+1][y];
+		
+		// Initialize the dp table 
+		for(int j = 0; j< yarr.length; j++ )
+			trellis[0][j] = new Node(getTransitionProbability("*", yarr[j]),"*", null);
+		
 
+		for(int i = 1; i <= x; i ++ )
+		{
+			for(int j = 0; j< yarr.length; j++ )
+			{
+				String maxPosTag = "*";
+				double maxProb = 0.0;
+				Node maxNode =null;
+				for(int k = 0; k<yarr.length; k++)
+				{
+					double value = trellis[i-1][k].probability; 
+					double score = weightedSum(sentence.wordTags.get(i-1).getWordFeatureVector(), weight );
+					if(score == 0)
+						score = 0.01;
+					value *= score;
+					System.out.println(value);
+					if(value >= maxProb)
+					{
+						maxProb = value;
+						maxPosTag = yarr[k];
+						maxNode = trellis[i-1][k];
+					}
+				}
+				trellis[i][j] = new Node(maxProb, maxPosTag, maxNode);
+			}
+			
+		}
+		// Find the best path
+		
+		double maxProb = 0.0;
+		Node maxNode = null;
+		for(int j=0; j < y; j++)
+		{
+			if(trellis[x][j]!=null){
+				if(trellis[x][j].probability >= maxProb)
+				{
+					double value = trellis[x][j].probability; 
+					if(value >= maxProb)
+					{
+						maxProb = value;
+						maxNode = trellis[x][j];
+					}
+				}
+			}
+		}	
+		Node traverse = maxNode;
+		SuperWord wordtags [] = new SuperWord[x];
+		
+		
+		while(--x>=0)
+		{
+			wordtags[x] = new SuperWord(sentence.wordTags.get(x).word, traverse.postag);
+			if(traverse.backp!= null)
+				traverse = traverse.backp;
+		}
+		
+		for(SuperWord wordTag: wordtags)
+		{
+			if(wordTag.postag == null)
+				wordTag.postag = "*";
+		}
+		return Arrays.asList(wordtags);
+
+	}
+	
+	public static double weightedSum(double [] a ,double [] b)
+	{
+	    double value = 0.0d;
+	    double sum = 0.0d;
+
+	    for (int i = 0 ; i < a.length ; i++)
+	    {
+	        value = a[i] * b [i];
+	        sum = sum +value ;
+
+	    }
+
+	    return sum;
+	}
+	
 
 		
 }

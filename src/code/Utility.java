@@ -210,5 +210,16 @@ public class Utility {
 		for(String tag : OneDMatrix.keySet())
 				System.out.print( tag + " : "  + OneDMatrix.get(tag)+"\t");
 	}
-
+	
+	public static void printDoubArray(double [] doubArray)
+	
+	{
+		System.out.print("[ ");
+		for(int a = 0; a < doubArray.length; a++)
+		{
+			System.out.print(doubArray[a] + " , ");
+		}
+		System.out.print(" ]");
+	}
+	
 }

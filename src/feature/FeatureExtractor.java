@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import code.Sentence;
+import code.TrainPOS;
 import code.Utility;
 
 /*
@@ -75,7 +78,19 @@ public class FeatureExtractor {
 		 */
 		public void addFeatures(List<String> tokens, PositionFeaturePairs positionFeaturePairs);
 	}
-
+	
+	public static HashMap<String, Integer> getTop2000Features()
+	{
+		HashMap<String, Integer> topFeatures = new HashMap<String, Integer>(); 
+		int counter = 0;
+		for(String key: TrainPOS.fSet.featureSet.keySet())
+		{
+			if(TrainPOS.fSet.featureSet.get(key) > 17.0)
+				topFeatures.put(key, counter ++);
+		}
+		return topFeatures;
+	}
+	
 	public static void getFeatures(Sentence sentence) throws IOException
 	{
 		List<String> strings = Utility.sentenceAsListString(sentence);
@@ -87,8 +102,11 @@ public class FeatureExtractor {
 		for (int i=0; i < posFairs.size(); i++) {
 			int t = posFairs.labelIndexes.get(i);
 			String fName = posFairs.featureNames.get(i);
-			double fValue = posFairs.featureValues.get(i);
-			sentence.wordTags.get(t).features.put(fName,fValue);
+			sentence.wordTags.get(t).features.put(fName,1.0);
+			if(TrainPOS.fSet.featureSet.containsKey(fName))
+				TrainPOS.fSet.featureSet.put(fName, TrainPOS.fSet.featureSet.get(fName) + 1);
+			else
+				TrainPOS.fSet.featureSet.put(fName,1);
 		}
 	}
 	
@@ -101,6 +119,7 @@ public class FeatureExtractor {
 		spilt.add(input);
 		List<Sentence> sentences = new ArrayList<Sentence>();
 		Utility.addSentence(sentences,spilt );
+		System.out.println(sentences);
 		
 	}
 	
@@ -134,15 +153,14 @@ public class FeatureExtractor {
 
 	private void initializeFeatureExtractors() throws IOException {
 		allFeatureExtractors = new ArrayList<FeatureExtractorInterface>();
-		allFeatureExtractors.add(new MiscFeatures.NgramSuffix(20));
-		allFeatureExtractors.add(new MiscFeatures.NgramPrefix(20));
 		allFeatureExtractors.add(new MiscFeatures.PrevWord());
 		allFeatureExtractors.add(new MiscFeatures.NextWord());
-		allFeatureExtractors.add(new MiscFeatures.WordformFeatures());
+		allFeatureExtractors.add(new MiscFeatures.NgramSuffix());
 		allFeatureExtractors.add(new MiscFeatures.CapitalizationFeatures());
+		allFeatureExtractors.add(new MiscFeatures.WordformFeatures());
 		allFeatureExtractors.add(new MiscFeatures.SimpleOrthFeatures());
 		allFeatureExtractors.add(new MiscFeatures.PrevNext());
-		allFeatureExtractors.add(new MiscFeatures.Positions());
+		allFeatureExtractors.add(new MiscFeatures.Next2Words());
 		allFeatureExtractors.add(new MiscFeatures.URLFeatures());
 
 	}

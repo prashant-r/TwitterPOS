@@ -232,8 +232,7 @@ public class MiscFeatures {
 	}
 	public static class NgramPrefix implements FeatureExtractorInterface {
 		int ngram=3;
-		public NgramPrefix(int i) {
-			ngram=i;
+		public NgramPrefix() {
 		}
 		public void addFeatures(List<String> tokens, PositionFeaturePairs pairs) {
 			for (int t=0; t < tokens.size(); t++) {
@@ -250,8 +249,7 @@ public class MiscFeatures {
 	}
 	public static class NgramSuffix implements FeatureExtractorInterface {
 		int ngram=3;
-		public NgramSuffix(int i) {
-			ngram=i;
+		public NgramSuffix() {
 		}
 		public void addFeatures(List<String> tokens, PositionFeaturePairs pairs) {
 			for (int t=0; t < tokens.size(); t++) {
