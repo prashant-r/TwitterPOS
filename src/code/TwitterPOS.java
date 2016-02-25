@@ -32,5 +32,6 @@ public class TwitterPOS {
 		Viterbi viterbi = new Viterbi(recordedState);
 		
 		List<SuperWord> tagMapping = viterbi.decode(textToTag);
+		
 	}
 }

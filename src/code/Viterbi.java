@@ -136,11 +136,8 @@ public class Viterbi {
 				if(trellis[x][j].probability > maxProb)
 				{
 					double value = trellis[x][j].probability; 
-					if(value > maxProb)
-					{
-						maxProb = value;
-						maxNode = trellis[x][j];
-					}
+					maxProb = value;
+					maxNode = trellis[x][j];
 				}
 			}
 		}	
@@ -170,9 +167,11 @@ public class Viterbi {
 		
 		// Initialize the dp table 
 		for(int j = 0; j< yarr.length; j++ )
-			trellis[0][j] = new Node(getTransitionProbability("*", yarr[j]),"*", null);
+		{
+			trellis[0][j] = new Node(getPriorProbability(yarr[j]),"*", null);
+			//System.out.println(trellis[0][j]);
+		}
 		
-
 		for(int i = 1; i <= x; i ++ )
 		{
 			for(int j = 0; j< yarr.length; j++ )
@@ -182,23 +181,22 @@ public class Viterbi {
 				Node maxNode =null;
 				for(int k = 0; k<yarr.length; k++)
 				{
-					double value = trellis[i-1][k].probability; 
+					sentence.wordTags.get(i-1).addStateAwareFeatures(yarr[k], yarr[j]);
 					double score = weightedSum(sentence.wordTags.get(i-1).getWordFeatureVector(), weight );
-					if(score == 0)
-						score = 0.01;
-					value *= score;
-					System.out.println(value);
-					if(value >= maxProb)
+					if(score > maxProb)
 					{
-						maxProb = value;
+						maxProb = score;
 						maxPosTag = yarr[k];
 						maxNode = trellis[i-1][k];
 					}
+					
+
 				}
 				trellis[i][j] = new Node(maxProb, maxPosTag, maxNode);
 			}
 			
 		}
+		//Utility.printTrellis(trellis, x, y);
 		// Find the best path
 		
 		double maxProb = 0.0;
@@ -206,14 +204,11 @@ public class Viterbi {
 		for(int j=0; j < y; j++)
 		{
 			if(trellis[x][j]!=null){
-				if(trellis[x][j].probability >= maxProb)
+				if(trellis[x][j].probability > maxProb)
 				{
 					double value = trellis[x][j].probability; 
-					if(value >= maxProb)
-					{
 						maxProb = value;
 						maxNode = trellis[x][j];
-					}
 				}
 			}
 		}	
@@ -226,12 +221,6 @@ public class Viterbi {
 			wordtags[x] = new SuperWord(sentence.wordTags.get(x).word, traverse.postag);
 			if(traverse.backp!= null)
 				traverse = traverse.backp;
-		}
-		
-		for(SuperWord wordTag: wordtags)
-		{
-			if(wordTag.postag == null)
-				wordTag.postag = "*";
 		}
 		return Arrays.asList(wordtags);
 

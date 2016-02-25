@@ -6,17 +6,12 @@ public class SuperWord {
 
 	@Override
 	public String toString() {
-		return "SuperWord [word=" + word + ", postag=" + postag + ", features=" + features + ", guessTag=" + guessTag
-				+ ", previousTag=" + previousTag + "]";
+		return "SuperWord [word=" + word + ", postag=" + postag + ", features=" + features +  "]";
 	}
 
 	public String word;
 	public String postag;
 	public HashMap<String, Double> features;
-	public String guessTag;
-	public String previousTag;
-	
-	
 	double[] getWordFeatureVector()
 	{
 		double doubArray [] = new double[TrainPOS.fSet.featureSet.size()];
@@ -26,6 +21,14 @@ public class SuperWord {
 		return doubArray;
 	}
 	
+	
+	public void addStateAwareFeatures(String currLabel, String prevLabel)
+	{
+		String prevlabelWord = "prevlabelword|"+word+"|" + prevLabel;
+		String currLabelWord = "currlabelword|"+word+"|" + currLabel;
+		features.put(prevlabelWord, 3.0);
+		features.put(currLabelWord, 3.0);
+	}
 	
 	SuperWord(String word, String postag)
 	{
@@ -48,22 +51,6 @@ public class SuperWord {
 
 	public void setPostag(String postag) {
 		this.postag = postag;
-	}
-
-	public String getGuessTag() {
-		return guessTag;
-	}
-
-	public void setGuessTag(String guessTag) {
-		this.guessTag = guessTag;
-	}
-
-	public String getPreviousTag() {
-		return previousTag;
-	}
-
-	public void setPreviousTag(String previousTag) {
-		this.previousTag = previousTag;
 	}
 
 	

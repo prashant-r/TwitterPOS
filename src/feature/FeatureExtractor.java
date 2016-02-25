@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.TreeMap;
 
 import code.Sentence;
+import code.SuperWord;
 import code.TrainPOS;
 import code.Utility;
+import feature.FeatureExtractor.PositionFeaturePairs;
 
 /*
  * DISCLAIMER: Code below is NOT MINE. Its from CMU ark-tweet-nlp POS Tagger, which itself derived some code from Twitter.
@@ -79,13 +81,13 @@ public class FeatureExtractor {
 		public void addFeatures(List<String> tokens, PositionFeaturePairs positionFeaturePairs);
 	}
 	
-	public static HashMap<String, Integer> getTop2000Features()
+	public static HashMap<String, Integer> getTopFeatures()
 	{
 		HashMap<String, Integer> topFeatures = new HashMap<String, Integer>(); 
 		int counter = 0;
 		for(String key: TrainPOS.fSet.featureSet.keySet())
 		{
-			if(TrainPOS.fSet.featureSet.get(key) > 17.0)
+			if(TrainPOS.fSet.featureSet.get(key)>20)
 				topFeatures.put(key, counter ++);
 		}
 		return topFeatures;
@@ -99,6 +101,9 @@ public class FeatureExtractor {
 		FeatureExtractor featureExtractor = new FeatureExtractor();
 		for(FeatureExtractorInterface fint : featureExtractor.allFeatureExtractors)
 			fint.addFeatures(strings, posFairs);
+		//Compute state aware features
+		StateAwareFeatures.CurrLabelWord(sentence.wordTags, posFairs);
+		StateAwareFeatures.PosLabelWord(sentence.wordTags, posFairs);
 		for (int i=0; i < posFairs.size(); i++) {
 			int t = posFairs.labelIndexes.get(i);
 			String fName = posFairs.featureNames.get(i);
@@ -153,16 +158,8 @@ public class FeatureExtractor {
 
 	private void initializeFeatureExtractors() throws IOException {
 		allFeatureExtractors = new ArrayList<FeatureExtractorInterface>();
-		allFeatureExtractors.add(new MiscFeatures.PrevWord());
-		allFeatureExtractors.add(new MiscFeatures.NextWord());
 		allFeatureExtractors.add(new MiscFeatures.NgramSuffix());
-		allFeatureExtractors.add(new MiscFeatures.CapitalizationFeatures());
-		allFeatureExtractors.add(new MiscFeatures.WordformFeatures());
-		allFeatureExtractors.add(new MiscFeatures.SimpleOrthFeatures());
-		allFeatureExtractors.add(new MiscFeatures.PrevNext());
-		allFeatureExtractors.add(new MiscFeatures.Next2Words());
-		allFeatureExtractors.add(new MiscFeatures.URLFeatures());
-
+		allFeatureExtractors.add(new MiscFeatures.NgramPrefix());
 	}
 
 

@@ -221,5 +221,16 @@ public class Utility {
 		}
 		System.out.print(" ]");
 	}
-	
+	public static void printTrellis(Node [][] trellis, int x, int y)
+	{
+		System.out.println("Trellis looks like ---");
+		for(int a = 0; a < x; a++)
+		{
+			for(int b = 0; b< y; b++)
+			{
+				System.out.print(trellis[a][b] + "    ");
+			}
+		System.out.println();
+		}
+	}
 }

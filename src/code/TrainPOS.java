@@ -98,7 +98,7 @@ public class TrainPOS {
 		fSet = new FeatureSet(new HashMap<String, Integer>());
 		TrainPOS trainPOS = new TrainPOS();
 		List<Sentence> sentences = trainPOS.readCorpus(trainPath);
-		TrainPOS.fSet.featureSet = FeatureExtractor.getTop2000Features();
+		TrainPOS.fSet.featureSet = FeatureExtractor.getTopFeatures();
 		trainPOS.recordState(oraclePath);
 		StructuredPerceptron.learn(sentences);
 		

@@ -8,31 +8,35 @@ public class StructuredPerceptron {
 	{
 		double[] weight = new double[TrainPOS.fSet.featureSet.size()];
 		for (int i= 0; i< weight.length; i++) {
-  				weight[i] = 0.0;
+  				weight[i] = 1.0;
   		}		
 
 		boolean run = true;
 		int q = 0;
 		while (run){
 			// for each training example(x, y)
+			System.out.println("the " + (q+1) + " iteration");
 			for(Sentence sentence: sentences){
-				System.out.println("the " + (q+1) + " iteration");
+				
 				List<SuperWord> input = sentence.wordTags;
 				List<SuperWord> output = Viterbi.decode(sentence, weight);
 				int convergenceCounter = 0;
 				int wordCounter =0;
+				System.out.println();
+				double learningRate = 0.1;
 				for(SuperWord superWord : output)
-				{	
+				{
+					System.out.print(superWord.postag + " ");
 					if(input.get(wordCounter).word.equals(superWord.word))
 						{
-							if(!input.get(wordCounter).postag.equals(superWord.postag))
+							if(input.get(wordCounter).postag.equals(superWord.postag))
 							{ 
-								weight[wordCounter]+=1;
+								weight[wordCounter]+=learningRate*4;
+								++convergenceCounter;
 							}
 							else
 							{
-								weight[wordCounter]-=1;
-								++convergenceCounter;
+								weight[wordCounter]-=learningRate*4;
 							}
 						}
 						++wordCounter;
@@ -49,7 +53,7 @@ public class StructuredPerceptron {
 			}
 		
 		for (int j = 0; j < weight.length; j++) {
-			System.out.println(weight[j]);
+			System.out.print(weight[j] + " ");
 		}
 		return weight;
 	}

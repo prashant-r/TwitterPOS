@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import code.SuperWord;
 import feature.FeatureExtractor.FeatureExtractorInterface;
 import feature.FeatureExtractor.PositionFeaturePairs;
 /*
@@ -276,7 +277,6 @@ public class MiscFeatures {
 			}
 		}
 	}
-	
 
 
 }
