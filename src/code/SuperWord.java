@@ -16,18 +16,28 @@ public class SuperWord {
 	{
 		double doubArray [] = new double[TrainPOS.fSet.featureSet.size()];
 		for(String key: features.keySet())
+		{
 			if(TrainPOS.fSet.featureSet.containsKey(key))
+			{
+				//System.out.println(key  + " " + word);
 				doubArray[TrainPOS.fSet.featureSet.get(key)] = features.get(key);
+			}
+		}
 		return doubArray;
 	}
 	
 	
-	public void addStateAwareFeatures(String currLabel, String prevLabel)
+	public double[] addStateAwareFeatures(String currLabel, String prevLabel)
 	{
 		String prevlabelWord = "prevlabelword|"+word+"|" + prevLabel;
 		String currLabelWord = "currlabelword|"+word+"|" + currLabel;
 		features.put(prevlabelWord, 3.0);
 		features.put(currLabelWord, 3.0);
+		double x[] = getWordFeatureVector();
+		features.remove(prevlabelWord);
+		features.remove(currLabelWord);
+		return x;
+		
 	}
 	
 	SuperWord(String word, String postag)

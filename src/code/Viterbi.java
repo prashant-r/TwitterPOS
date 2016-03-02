@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 public class Viterbi {
 
-	private static HashMap<String, HashMap<String, Integer>> emissionMatrix;
-	private static HashMap<String, HashMap<String, Integer>> transitionMatrix;
-	private static HashMap<String, Integer> observedTagCountMatrix;
+	public static HashMap<String, HashMap<String, Integer>> emissionMatrix;
+	public static HashMap<String, HashMap<String, Integer>> transitionMatrix;
+	public static HashMap<String, Integer> observedTagCountMatrix;
 	
 	
 	public Viterbi(RecordedState recordedState)

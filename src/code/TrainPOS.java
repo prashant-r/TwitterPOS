@@ -100,7 +100,11 @@ public class TrainPOS {
 		List<Sentence> sentences = trainPOS.readCorpus(trainPath);
 		TrainPOS.fSet.featureSet = FeatureExtractor.getTopFeatures();
 		trainPOS.recordState(oraclePath);
-		StructuredPerceptron.learn(sentences);
+		Utility.printHashMapA(TrainPOS.fSet.featureSet);
+		MEMM.learn(sentences);
+		CrossValidation.basicTestMEMM();
+		
+		//StructuredPerceptron.learn(sentences);
 		
 	}
 }

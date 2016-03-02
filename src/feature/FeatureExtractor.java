@@ -101,9 +101,6 @@ public class FeatureExtractor {
 		FeatureExtractor featureExtractor = new FeatureExtractor();
 		for(FeatureExtractorInterface fint : featureExtractor.allFeatureExtractors)
 			fint.addFeatures(strings, posFairs);
-		//Compute state aware features
-		StateAwareFeatures.CurrLabelWord(sentence.wordTags, posFairs);
-		StateAwareFeatures.PosLabelWord(sentence.wordTags, posFairs);
 		for (int i=0; i < posFairs.size(); i++) {
 			int t = posFairs.labelIndexes.get(i);
 			String fName = posFairs.featureNames.get(i);
@@ -112,6 +109,21 @@ public class FeatureExtractor {
 				TrainPOS.fSet.featureSet.put(fName, TrainPOS.fSet.featureSet.get(fName) + 1);
 			else
 				TrainPOS.fSet.featureSet.put(fName,1);
+		}
+	}
+	
+	public static void setFeatures(SuperWord superWord) throws IOException
+	{
+		PositionFeaturePairs posFairs = new PositionFeaturePairs(); 
+		FeatureExtractor featureExtractor = new FeatureExtractor();
+		List<String> strings = new ArrayList<String> ();
+		strings.add(superWord.word);
+		for(FeatureExtractorInterface fint : featureExtractor.allFeatureExtractors)
+			fint.addFeatures(strings , posFairs);
+		for (int i=0; i < posFairs.size(); i++) {
+			int t = posFairs.labelIndexes.get(i);
+			String fName = posFairs.featureNames.get(i);
+			superWord.features.put(fName,1.0);
 		}
 	}
 	
@@ -158,8 +170,9 @@ public class FeatureExtractor {
 
 	private void initializeFeatureExtractors() throws IOException {
 		allFeatureExtractors = new ArrayList<FeatureExtractorInterface>();
-		allFeatureExtractors.add(new MiscFeatures.NgramSuffix());
-		allFeatureExtractors.add(new MiscFeatures.NgramPrefix());
+		allFeatureExtractors.add(new MiscFeatures.WordformFeatures());
+		allFeatureExtractors.add(new MiscFeatures.CapitalizationFeatures());
+		allFeatureExtractors.add(new MiscFeatures.SimpleOrthFeatures());
 	}
 
 
